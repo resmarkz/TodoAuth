@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Tasks\StoreRequest;
+use App\Http\Requests\Tasks\UpdateRequest;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,9 +63,11 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateRequest $request, Task $task)
     {
-        //
+        $validated = $request->validated();
+        $task->update($validated);
+        return redirect()->route('tasks.index');
     }
 
     /**
@@ -72,6 +75,19 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect()->route('tasks.index');
+    }
+
+    // Custom methods
+    public function markAsCompleted(Task $task)
+    {
+        $task->update(['completed' => true]);
+        return redirect()->route('tasks.index');
+    }
+    public function markAsNotCompleted(Task $task)
+    {
+        $task->update(['completed' => false]);
+        return redirect()->route('tasks.index');
     }
 }
