@@ -80,6 +80,20 @@ class TaskController extends Controller
     }
 
     // Custom methods
+    public function fetchCompletedTasks()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $tasks = $user->tasks()->where('completed', true)->get();
+        return view('tasks.index', compact('tasks'));
+    }
+    public function fetchNotCompletedTasks()
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $tasks = $user->tasks()->where('completed', false)->get();
+        return view('tasks.index', compact('tasks'));
+    }
     public function markAsCompleted(Task $task)
     {
         $task->update(['completed' => true]);
